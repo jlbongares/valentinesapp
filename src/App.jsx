@@ -67,7 +67,7 @@ const App = () => {
             initial={{ opacity: 0, x: textStage === 3 ? 0 : -20 }}
             animate={{ opacity: fadeOut ? 0 : 1, x: 0 }}
             transition={{ duration: 1 }}
-            className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 text-transparent bg-clip-text pb-8"
+            className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 text-transparent bg-clip-text pb-8 text-center"
           >
             {textStage === 0
               ? "Will you be my Valentine?"
@@ -81,7 +81,7 @@ const App = () => {
 
           {/* Buttons (Only show before clicking Yes) */}
           {textStage === 0 && (
-            <div className="mt-6 flex justify-center gap-[7vw]">
+            <div className="mt-6 flex flex-col sm:flex-row sm:gap-[5vw] space-y-4 sm:space-y-0 sm:space-x-6 gap-[7vw]">
               <motion.button
                 className="!bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:!bg-blue-700 transition duration-300"
                 animate={{ scale: yesSize }}
