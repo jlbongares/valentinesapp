@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Confetti from "react-confetti";
+import gsap from "gsap";
 
 const App = () => {
   const [showFireworks, setShowFireworks] = useState(false);
@@ -24,18 +25,34 @@ const App = () => {
     "Nooo"
   ];
 
+  const textRef = useRef(null);
+
   // Handle text transitions automatically
   useEffect(() => {
     if (textStage === 1) {
       setTimeout(() => setTextStage(2), 3000);
     } else if (textStage === 2) {
-      // Transition to "Let me sing this song for you."
-      setTimeout(() => setTextStage(3), 2000);
-    } else if (textStage === 3) {
-      setFadeOut(true);
       setTimeout(() => {
-        setShowVideo(true); // Show video right after fade-out
-      }, 1000); // Slightly after fade starts, ensuring smooth transition
+        gsap.to(textRef.current, {
+          scale: 1.2,
+          opacity: 1,
+          duration: 1,
+          ease: "power2.out"
+        });
+
+        setTimeout(() => {
+          gsap.to(textRef.current, {
+            scale: 3,
+            opacity: 0,
+            duration: 1,
+            ease: "power2.inOut",
+            onComplete: () => {
+              setFadeOut(true);
+              setShowVideo(true);
+            }
+          });
+        }, 1000);
+      }, 2000);
     }
   }, [textStage]);
 
@@ -61,10 +78,10 @@ const App = () => {
 
       {!showVideo ? (
         <>
-          {/* Smooth Text Transitions */}
           <motion.h1
             key={textStage}
-            initial={{ opacity: 0, x: textStage === 3 ? 0 : -20 }}
+            ref={textRef}
+            initial={{ opacity: 0, x: 0 }}
             animate={{ opacity: fadeOut ? 0 : 1, x: 0 }}
             transition={{ duration: 1 }}
             className="text-3xl font-bold bg-gradient-to-r from-purple-500 to-blue-500 text-transparent bg-clip-text pb-8 text-center"
@@ -75,8 +92,7 @@ const App = () => {
               ? "She said yes!!!"
               : textStage === 2
               ? "Let me sing this song for you."
-              : ""
-            }
+              : ""}
           </motion.h1>
 
           {/* Buttons (Only show before clicking Yes) */}
@@ -108,10 +124,10 @@ const App = () => {
           className="w-full h-full flex items-center justify-center"
         >
           <video
-            src="your-video-url.mp4"
+            src="video/cover.mp4"
             controls
             autoPlay
-            className="w-4/5 rounded-lg shadow-lg"
+            className="max-h-[80vh] max-w-[90vw] object-contain rounded-lg shadow-lg"
           ></video>
         </motion.div>
       )}
